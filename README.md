@@ -9,3 +9,5 @@ To access the app one must log in with the provided credentials. Each role has i
    1. The Finance team has to approve the spending by reviewing the bill and other necessary info.
 
   ##  [checkout the apk](https://expo.dev/accounts/jobayerrahmanohee/projects/globalAccounts2/builds/d5862ebb-0af9-4fb6-9b89-45cb011ba96e)
+  ## [Backend](https://github.com/JubayerRahman/GlobalAccounts-Server)
+  ## [API](https://global-acounts-backend.vercel.app/)
