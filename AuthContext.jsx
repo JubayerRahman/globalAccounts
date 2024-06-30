@@ -8,7 +8,11 @@ const AuthProvider = ({ children }) => {
 
     const contextValue = {
       adminMail:   "admingmail@gmail.com",
-      managerMail: "manager@gmail.com",
+      dmanagerMail: "dmanager@gmail.com",
+      cmanagerMail: "cmanager@gmail.com",
+      smanagerMail: "smanager@gmail.com",
+      bmanagerMail: "bmanager@gmail.com",
+      kmanagerMail: "kmanager@gmail.com",
       financemail: "finance@gmail.com",
       adminPass:   "admin100global",
       managerPass: "manager100global",

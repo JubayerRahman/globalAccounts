@@ -1,10 +1,11 @@
 import { View, Text, ScrollView, TextInput, Image, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, Stack } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import useAxios from '../Hook/useAxios'
 import * as ImagePicker from "expo-image-picker"
 import axios, { all } from 'axios'
+import { AuthContext } from '../../AuthContext'
 
 const Index = () => {
 
@@ -13,7 +14,7 @@ const Index = () => {
   const month = data.getMonth()
   const [billImage, setBillImage] = useState(null)
   const imageUploadUrl = `https://api.imgbb.com/1/upload?key=4f76c18e33ad9cd249d69804ea663a74`
-  const [uploadedBillLink, setUploadedBillLink] = useState("")
+  const [uploadedBillLink, setUploadedBillLink] = useState("null")
   const [amoutInput, setAmountInput] = useState("")
   const [beanchName, setBranchName] = useState("")
   const [loading, setLoading] = useState(false)
@@ -30,8 +31,17 @@ const Index = () => {
 
   const Axios = useAxios()
 
+  const {Role} = useContext(AuthContext)
+
+  const currentBranch = 
+  Role === "DManager" ? "Dhaka" : 
+  Role === "CManager"? "Chattogram" : 
+  Role === "SManager" ? "Sylhet" :
+  Role === "BManager" ? "Barishal" :
+  Role === "KManager" ? "Khulna" : "unknown"
+
   useEffect(()=>{
-    Axios(`/budget?currentMonth=${currentMonth}&city=Dhaka`)
+    Axios(`/budget?currentMonth=${currentMonth}&city=${currentBranch}`)
     .then(data => setMonthData(data.data))
   },[])
 
@@ -75,12 +85,12 @@ const Index = () => {
 
           // Now the Api making
           const approve = "notapproved"
-          const spentData = {beanchName,amoutInput, currentMonth,  uploadDate, uploadedBillLink, approve}
+          const spentData = {beanchName,amoutInput, currentMonth,  uploadDate, "uploadedBillLink": `${res?.data?.data?.display_url}`, approve}
           Axios.post("/spent", spentData)
           .then(data=>{
             if (data.data.acknowledged === true){
               Alert.alert("Your data is stored wait for approval thanks.")
-              setBillImage('')
+              // setBillImage("null")
               setAmountInput('')
               setLoading(false)
           }
@@ -93,6 +103,7 @@ const Index = () => {
       })
     }
   }
+  console.log(uploadedBillLink);
   
   return (
     <ScrollView style={{backgroundColor:"#07161b", height:"100%", padding:"10px"}}>
@@ -105,7 +116,7 @@ const Index = () => {
               <Text className="text-3xl text-white text-left font-bold">Here is your this months budget limit: {data.budget}</Text>
               <Text className="text-3xl text-white text-left font-bold">spent: {data.spend}</Text>
               <Text className="text-center text-4xl mt-[30px] text-white mb-[20px] ">List spending:</Text>
-              <Text className={`${loading ? "block text-white text-2xl text-green-500  text-center":"hidden"}`}>Uploading data please wait</Text>
+              <Text className={`${loading ? "block text-2xl text-green-500  text-center":"hidden"}`}>Uploading data please wait</Text>
               <TextInput value={amoutInput} onChangeText={(text)=>setAmountInput(text)}  className="text-xl p-[10px] bg-white  rounded-xl border-[#cec7bf] border-2" keyboardType='number-pad'  placeholder='Amount' />
                 <Image className="h-[100px] w-[100px] border-2 mx-auto mt-[10px] mb-[10px]" source={{uri:`${billImage}`}} />
               <View className="flex-row items-center">

@@ -1,13 +1,22 @@
 import { View, Text, FlatList, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import useAxios from '../Hook/useAxios'
+import { AuthContext } from '../../AuthContext'
 
 const Transactions = () => {
   const Axios = useAxios()
   const [spentData, setSpentData] = useState([])
+  const {Role} = useContext(AuthContext)
+
+  const currentBranch = 
+  Role === "DManager" ? "Dhaka" : 
+  Role === "CManager"? "Chattogram" : 
+  Role === "SManager" ? "Sylhet" :
+  Role === "BManager" ? "Barishal" :
+  Role === "KManager" ? "Khulna" : "unknown"
 
   useEffect(()=>{
-    Axios('/spent?city=Dhaka')
+    Axios(`/spent?city=${currentBranch}`)
     .then(data=> setSpentData(data.data))
   },[])
 
